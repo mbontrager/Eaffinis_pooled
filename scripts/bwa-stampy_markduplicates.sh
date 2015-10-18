@@ -1,5 +1,17 @@
 ﻿#!/bin/bash
 # Default parameters
+################################################################
+#
+# Usage: Place in directory with .bam files.
+# bash bwa-stampy_markduplicates.sh NNN REF
+# Where NNN is the filename of the bam file (without .bam)
+# and REF is the path to the reference genome from which the
+# bam files were generated
+#
+# mbontrager@gmail.com
+#
+################################################################
+
 RMTMPFILES=true
 CALCCOV=true
 THREADS=1
