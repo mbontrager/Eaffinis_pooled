@@ -17,7 +17,7 @@ samples <- gsub(".bam", "", samples)
 
 for (i in samples){
     a <- read.delim(paste(i, "/", i, "-smds.coverage.percontig"), 
-                    stringsAsFactors = FALSE)
+                    stringsAsFactors = FALSE, header = FALSE, sep = ' ')
     ggplot(a, aes(x=V2)) + geom_density(fill="red", alpha=0.2)
     ggplot(a, aes(x=V2)) + 
         geom_histogram(binwidth=2, colour="black", fill="blue", alpha=0.2) +
