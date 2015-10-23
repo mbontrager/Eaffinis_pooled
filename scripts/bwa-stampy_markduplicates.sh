@@ -15,15 +15,13 @@
 RMTMPFILES=true
 CALCCOV=true
 THREADS=1
-RNAME=$1
-CURDIR=`pwd`
-REF=$2
+RNAME=$2
+DNAME=$1
 
-mkdir -p $RNAME
-cd $RNAME
+mkdir -p ${DNAME}${RNAME}
 
 # Sort bam file
-samtools sort ../${RNAME}.bam ../${RNAME}-s
+samtools sort ${DNAME}${RNAME}.bam ../${RNAME}-s
 
 # Index sorted bam file
 samtools index ../${RNAME}-s.bam
@@ -46,12 +44,9 @@ samtools index ${RNAME}-smds.bam
 if $CALCCOV; then
     genomeCoverageBed -ibam ${RNAME}-smds.bam > ${RNAME}-smds.coverage
    # generate table with length and coverage stats per contig (From http://github.com/BinPro/CONCOCT)
-    python gen_contig_cov_per_bam_table.py --isbedfiles $REF ${RNAME}-smds.coverage > ${RNAME}-smds.coverage.percontig
 fi
 
 # Remove temp files
 if $RMTMPFILES; then
     rm ../${RNAME}-s* ${RNAME}-smd.bam 
 fi
-
-cd $CURDIR
