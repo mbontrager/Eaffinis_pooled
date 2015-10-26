@@ -39,7 +39,9 @@ def main():
     for f in output:
         sample_list.append(f.replace(options.dir, '').replace('.bam', ''))
 
-    mark_duplicates(sample_list, options.ref, options.dir)
+    #mark_duplicates(sample_list, options.ref, options.dir)
+    #filter_unmapped(sample_list, options.dir)
+    count_unmapped(sample_list, options.dir)
 
 # Simplify running bash commands
 def run(cmd):
@@ -54,6 +56,27 @@ def mark_duplicates(sample_list, ref, dir):
                ref + ' ' + dir + n + '/' + n + '-smds.coverage > ' + dir + n +
                '/' + n + '-smds.coverage.py.percontig')
         run(cmd)
+
+def filter_unmapped(sample_list, dir):
+    for i in sample_list:
+
+        cmd = ('samtools view -b -f 4 ' + dir + i + '.bam -o ' + dir +
+               'unmapped/' + i + '_unmapped.bam')
+        run(cmd)
+        cmd = ('samtools sort ' + dir + 'unmapped/' + i + '_unmapped.bam ' +
+               dir + 'unmapped/' + i + '-s')
+        run(cmd)
+        cmd = ('samtools index ' + dir + 'unmapped/' + i + '-s.bam')
+        run(cmd)
+        cmd = ('rm ' + dir + 'unmapped/' + i + '_unmapped.bam')
+        run(cmd)
+
+def count_unmapped(sample_list, dir):
+    for i in sample_list:
+        cmd = ('samtools idxstats ' + dir + i + '/' + i + '-smds.bam > ' + dir +
+               i + '/' + i + '-smds.mappingstats.tsv')
+        run(cmd)
+
     
 if __name__ == "__main__":
     main()
