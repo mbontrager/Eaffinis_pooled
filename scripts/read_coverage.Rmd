@@ -7,23 +7,28 @@ output: html_document
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='Figs/',
                       echo=FALSE, warning=FALSE, message=FALSE, cache=TRUE)
+library(ggplot2)
 ```
 
 After Illumina sequencing of pooled populations of E. affinis, I want to generate read coverage stats and figures for the sequenced samples. The reads have already been aligned with BWA-MEM and Stampy, then indexed and sorted into .bam files. 
 
 ```{r read_data}
+#setwd("/home/tiago/LeeRemote/metagenomics/alignments_copepod_stampy") #Tiago's work directory
 samples <- list.files(pattern="*.bam")
 samples <- gsub(".bam", "", samples)
 
 for (i in samples){
-    a <- read.delim(paste(i, "/", i, "-smds.coverage.percontig"), 
-                    stringsAsFactors = FALSE, header = FALSE, sep = ' ')
-    ggplot(a, aes(x=V2)) + geom_density(fill="red", alpha=0.2)
-    ggplot(a, aes(x=V2)) + 
+    print(paste("#", i, sep = ''))
+    
+    a <- read.delim(paste(i, "/", i, "-smds.coverage.py.percontig", sep=""))
+    
+    print(paste("Coverage Mean", mean(x=a$cov_mean_sample_0)))
+    print(paste("% Coverage", mean(x=a$percentage_covered_sample_0)))
+    print(ggplot(a, aes(x=cov_mean_sample_0)) + 
         geom_histogram(binwidth=2, colour="black", fill="blue", alpha=0.2) +
-        coord_cartesian(xlim = c(0, 100))
-     ggplot(a, aes(x=V2)) + 
-         geom_point(size=1.5, colour="blue", alpha=0.08)
+        coord_cartesian(xlim = c(0, 100)))
+    print(ggplot(a, aes(x=percentage_covered_sample_0)) + 
+         geom_histogram(binwidth=2, colour="blue", fill="green",alpha=0.08))
     
 }    
 ```
