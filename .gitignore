@@ -1,3 +1,4 @@
 background/
-scripts/cache/analyses/
+scripts/cache/
+analyses/
 .dropbox
