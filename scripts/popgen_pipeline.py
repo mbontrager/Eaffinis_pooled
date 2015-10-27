@@ -3,7 +3,7 @@
 import sys, getopt, glob, subprocess, shutil
 from optparse import OptionParser
 
-############################################################
+################################################################################
 # Wrap script for pooled population genomics analysis
 #
 # Author: Martin Bontrager
@@ -11,7 +11,7 @@ from optparse import OptionParser
 # Usage: python popgen_pipeline.py -r /full/path/to/reference/genome.fa -d
 #                                  /full/path/to/bamfile/dir/
 #
-############################################################
+################################################################################
 
 def main():
     

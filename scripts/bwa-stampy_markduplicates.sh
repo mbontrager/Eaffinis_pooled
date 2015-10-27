@@ -44,7 +44,6 @@ samtools index ${DNAME}${RNAME}/${RNAME}-smds.bam
 if $CALCCOV; then
     genomeCoverageBed -ibam ${DNAME}${RNAME}/${RNAME}-smds.bam > \
     ${DNAME}${RNAME}/${RNAME}-smds.coverage
-   # generate table with length and coverage stats per contig (From http://github.com/BinPro/CONCOCT)
 fi
 
 # Remove temp files
@@ -53,3 +52,6 @@ if $RMTMPFILES; then
        ${DNAME}${RNAME}/${RNAME}-smd.bam \
        ${DNAME}${RNAME}/${RNAME}-s.bai
 fi
+
+# Use GATK to realign around indels
+
