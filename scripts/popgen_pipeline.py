@@ -95,15 +95,17 @@ def add_headers(sample_list, dir):
         cmd = ('java -jar  ' + 
         '/home/lee/bioinformatics/picard-tools-1.135/picard.jar ' + 
         'AddOrReplaceReadGroups ' +
-        'I= ' + file + ' ' +
-        'O=  ' + dir + i + '/' + i + '_withRG.bam ' +
+        'I=' + file + ' ' +
+        'O=' + dir + i + '/' + i + '-smds_withRG.bam ' +
         'SORT_ORDER=coordinate ' + 
         'RGID=' + i + ' ' + 
         'RGLB=' + i + '1 ' +  
         'RGPL=ILLUMINA ' + 
         'RGPU=' + i + 'seq ' + 
         'RGSM=' + i)
-        print(cmd)
+        run(cmd)
+        cmd = ('rm ' + file)
+        run(cmd)
 
 if __name__ == "__main__":
     main()
