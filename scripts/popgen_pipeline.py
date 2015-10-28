@@ -41,7 +41,9 @@ def main():
 
     #mark_duplicates(sample_list, options.ref, options.dir)
     #filter_unmapped(sample_list, options.dir)
-    count_unmapped(sample_list, options.dir)
+    #count_unmapped(sample_list, options.dir)
+    #realign(sample_list, options.ref, options.dir)
+    add_headers(sample_list, options.dir)
 
 # Simplify running bash commands
 def run(cmd):
@@ -73,10 +75,35 @@ def filter_unmapped(sample_list, dir):
 
 def count_unmapped(sample_list, dir):
     for i in sample_list:
-        cmd = ('samtools idxstats ' + dir + i + '/' + i + '-smds.bam > ' + dir +
-               i + '/' + i + '-smds.mappingstats.tsv')
+        cmd = ('samtools idxstats ' + dir + i + '/' + i + '-smds.bam > ' + 
+                dir + i + '/' + i + '-smds.mappingstats.tsv')
         run(cmd)
 
-    
+def realign(sample_list, ref, dir):
+    for i in sample_list:
+        cmd = ('java -jar $GATK ' + 
+               '-T RealignerTargetCreator ' +
+               '-R ' + ref + ' ' +
+               '-I ' + dir + i + '/' + i + '-smds.bam ' +
+               '-o ' + dir + i + '/' + i + '_realigned.list')
+        run(cmd)
+            
+def add_headers(sample_list, dir):
+    for i in sample_list:
+        file = dir + i + '/' + i + '-smds.bam'
+        print(file)
+        cmd = ('java -jar  ' + 
+        '/home/lee/bioinformatics/picard-tools-1.135/picard.jar ' + 
+        'AddOrReplaceReadGroups ' +
+        'I= ' + file + ' ' +
+        'O=  ' + dir + i + '/' + i + '_withRG.bam ' +
+        'SORT_ORDER=coordinate ' + 
+        'RGID=' + i + ' ' + 
+        'RGLB=' + i + '1 ' +  
+        'RGPL=ILLUMINA ' + 
+        'RGPU=' + i + 'seq ' + 
+        'RGSM=' + i)
+        print(cmd)
+
 if __name__ == "__main__":
     main()

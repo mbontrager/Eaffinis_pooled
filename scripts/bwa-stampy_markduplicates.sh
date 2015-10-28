@@ -53,5 +53,3 @@ if $RMTMPFILES; then
        ${DNAME}${RNAME}/${RNAME}-s.bai
 fi
 
-# Use GATK to realign around indels
-

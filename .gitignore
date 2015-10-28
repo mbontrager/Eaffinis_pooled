@@ -2,3 +2,4 @@ background/
 scripts/cache/
 analyses/
 .dropbox
+scripts/addReadGroups.py
