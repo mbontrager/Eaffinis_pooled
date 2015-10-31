@@ -42,8 +42,9 @@ def main():
     #mark_duplicates(sample_list, options.ref, options.dir)
     #filter_unmapped(sample_list, options.dir)
     #count_unmapped(sample_list, options.dir)
-    #realign(sample_list, options.ref, options.dir)
-    add_headers(sample_list, options.dir)
+    #add_headers(sample_list, options.dir)
+    #target_creator(sample_list, options.ref, options.dir)
+    realign(sample_list, options.ref, options.dir)
 
 # Simplify running bash commands
 def run(cmd):
@@ -79,19 +80,22 @@ def count_unmapped(sample_list, dir):
                 dir + i + '/' + i + '-smds.mappingstats.tsv')
         run(cmd)
 
-def realign(sample_list, ref, dir):
+def target_creator(sample_list, ref, dir):
     for i in sample_list:
+        
+        cmd = ('samtools index ' + dir + i + '/' + i + '-smds_withRG.bam')
+        run(cmd)
+        
         cmd = ('java -jar $GATK ' + 
                '-T RealignerTargetCreator ' +
                '-R ' + ref + ' ' +
-               '-I ' + dir + i + '/' + i + '-smds.bam ' +
+               '-I ' + dir + i + '/' + i + '-smds_withRG.bam ' +
                '-o ' + dir + i + '/' + i + '_realigned.list')
         run(cmd)
             
 def add_headers(sample_list, dir):
     for i in sample_list:
         file = dir + i + '/' + i + '-smds.bam'
-        print(file)
         cmd = ('java -jar  ' + 
         '/home/lee/bioinformatics/picard-tools-1.135/picard.jar ' + 
         'AddOrReplaceReadGroups ' +
@@ -103,6 +107,20 @@ def add_headers(sample_list, dir):
         'RGPL=ILLUMINA ' + 
         'RGPU=' + i + 'seq ' + 
         'RGSM=' + i)
+        run(cmd)
+        cmd = ('rm ' + file)
+        run(cmd)
+
+def realign(sample_list, ref, dir):
+    for i in sample_list:
+        file = dir + i + '/' + i + '-smds_withRG.bam'
+        relist = dir + i + '/' + i + '_realigned.list'
+        cmd = ('java -jar $GATK ' + 
+               '-T IndelRealigner ' +
+               '-R ' + ref + ' ' +
+               '-I ' + file + ' ' +
+               '-targetIntervals ' + relist + ' ' +
+               '-o ' + dir + i + '/' + i + '_realigned.bam')
         run(cmd)
         cmd = ('rm ' + file)
         run(cmd)
