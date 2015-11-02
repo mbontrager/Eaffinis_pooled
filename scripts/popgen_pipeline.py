@@ -35,29 +35,66 @@ def main():
     options.dir.rstrip('/')
     output = glob.glob(options.dir + "/*.bam")
 
-    sample_list = []
-    for f in output:
-        sample_list.append(f.replace(options.dir, '').replace('.bam', ''))
-
-    #mark_duplicates(sample_list, options.ref, options.dir)
-    #filter_unmapped(sample_list, options.dir)
-    #count_unmapped(sample_list, options.dir)
-    #add_headers(sample_list, options.dir)
-    #target_creator(sample_list, options.ref, options.dir)
-    realign(sample_list, options.ref, options.dir)
+    # Add all .bam files in the input directory to the samples list
+    sample_list = ['BRE']
+    #for f in output:
+     #   sample_list.append(f.replace(options.dir, '').replace('.bam', ''))
+    
+    # Modify this path to point at your picard .jar file 
+    picard_path = '/home/lee/bioinformatics/picard-tools-1.135/picard.jar'
+    
+    # Mark duplicates in the bam files, and sort, index the files   
+    mark_duplicates(sample_list, options.ref, options.dir, picard_path)
+    
+    # filter_unmapped(sample_list, options.dir)
+    # count_unmapped(sample_list, options.dir)
+    # add_headers(sample_list, options.dir)
+    # target_creator(sample_list, options.ref, options.dir)
+    # realign(sample_list, options.ref, options.dir)
 
 # Simplify running bash commands
 def run(cmd):
+    print('Running command: \n' + cmd + '\n') 
     p = subprocess.Popen(cmd, shell=True)
     p.communicate()
 
-def mark_duplicates(sample_list, ref, dir):
+def sort(inDir, outDir, f, h='-s'):
+    s = f.replace('.bam', '')
+    cmd = ('samtools sort ' + inDir + f + ' ' + outDir + s + h)
+    run(cmd)
+
+def index(filepath):
+    cmd = ('samtools index ' + filepath)
+    run(cmd)    
+    
+def mark_duplicates(sample_list, ref, dir, picard_path):
     for n in sample_list:
-        cmd = ('bash bwa-stampy_markduplicates.sh ' + dir + ' ' + n )
+        run('mkdir ' + dir + n)
+        sort(dir, (dir + n + '/'), (n + '.bam'))
+        index(dir + n + '/' + n + '-s.bam')
+        
+        cmd = ('java -Djava.io.tmpdir=' + dir + n + '/tmp -jar ' + 
+        picard_path + ' MarkDuplicates ' +
+        'INPUT=' + dir + n + '/' + n + '-s.bam ' +
+        'OUTPUT=' + dir + n + '/' + n + '-smd.bam ' +
+        'METRICS_FILE=' + dir + n + '/' + n + '-smd.metrics ' +
+        'AS=TRUE ' +
+        'VALIDATION_STRINGENCY=LENIENT ' + 
+        'MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000 ' + 
+        'REMOVE_DUPLICATES=TRUE ' + 
+        'TMP_DIR=' + dir + n + '/tmp')
         run(cmd)
-        cmd = ('python gen_contig_cov_per_bam_table.py --isbedfiles ' +
-               ref + ' ' + dir + n + '/' + n + '-smds.coverage > ' + dir + n +
-               '/' + n + '-smds.coverage.py.percontig')
+      
+        odir = (dir + n + '/')
+        smd = n + '-smd.bam'
+        smds = odir + n + '-smds.bam'
+        
+        sort(odir, odir, smd, h='s')
+        index(smds)
+        
+        # Calculate coverage
+        cmd = ('genomeCoverageBed -ibam ' + smds + ' > ' + odir + n +
+               '-smds.coverage')
         run(cmd)
 
 def filter_unmapped(sample_list, dir):

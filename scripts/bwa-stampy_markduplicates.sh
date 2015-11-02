@@ -12,7 +12,7 @@
 #
 ################################################################
 
-RMTMPFILES=true
+RMTMPFILES=false
 CALCCOV=true
 THREADS=1
 RNAME=$2
