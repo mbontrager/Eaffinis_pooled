@@ -44,29 +44,41 @@ def main():
     picard_path = '/home/lee/bioinformatics/picard-tools-1.135/picard.jar'
     
     # Mark duplicates in the bam files, and sort, index the files   
-    mark_duplicates(sample_list, options.ref, options.dir, picard_path)
+    #mark_duplicates(sample_list, options.ref, options.dir, picard_path)
     
-    # filter_unmapped(sample_list, options.dir)
-    # count_unmapped(sample_list, options.dir)
-    # add_headers(sample_list, options.dir)
-    # target_creator(sample_list, options.ref, options.dir)
-    # realign(sample_list, options.ref, options.dir)
+    # Filter unmapped reads from the bam file. And perform counts of unmapped
+    # reads to understand mapping patterns
+    filter_unmapped(sample_list, options.dir)
+    count_unmapped(sample_list, options.dir)
+    
+    # Add read group headers to bam files. This is a very naive implementation
+    # of adding read groups. I don't use the Illumina run information. As such,
+    # there are aspects of read correction in GATK that may not work well.
+    add_headers(sample_list, options.dir)
+    
+    # Find indel targets for realignment and then realign around them.
+    target_creator(sample_list, options.ref, options.dir)
+    #realign(sample_list, options.ref, options.dir)
 
 # Simplify running bash commands
 def run(cmd):
-    print('Running command: \n' + cmd + '\n') 
+    print('Running command: \n' + cmd + '\n\n') 
     p = subprocess.Popen(cmd, shell=True)
     p.communicate()
 
+# Samtools sort bam file
 def sort(inDir, outDir, f, h='-s'):
     s = f.replace('.bam', '')
     cmd = ('samtools sort ' + inDir + f + ' ' + outDir + s + h)
     run(cmd)
 
+# Samtools index bam file
 def index(filepath):
     cmd = ('samtools index ' + filepath)
     run(cmd)    
-    
+
+#Sort, index, run Picard MarkDuplicats, then sort and index again
+# Also calculate coverage per contig    
 def mark_duplicates(sample_list, ref, dir, picard_path):
     for n in sample_list:
         run('mkdir ' + dir + n)
@@ -97,6 +109,12 @@ def mark_duplicates(sample_list, ref, dir, picard_path):
                '-smds.coverage')
         run(cmd)
 
+        # Remove intermediate files:
+        run('rm ' + odir + smd)
+        run('rm ' + odir + n + '-s.bam.bai')
+        run('rm ' + odir + n + '-s.bam')
+
+# Use samtools to filter unmapped reads from a bam file        
 def filter_unmapped(sample_list, dir):
     for i in sample_list:
 
@@ -111,12 +129,14 @@ def filter_unmapped(sample_list, dir):
         cmd = ('rm ' + dir + 'unmapped/' + i + '_unmapped.bam')
         run(cmd)
 
+# Gather stats on unmapped reads        
 def count_unmapped(sample_list, dir):
     for i in sample_list:
         cmd = ('samtools idxstats ' + dir + i + '/' + i + '-smds.bam > ' + 
                 dir + i + '/' + i + '-smds.mappingstats.tsv')
         run(cmd)
 
+# Find indels in an alignment
 def target_creator(sample_list, ref, dir):
     for i in sample_list:
         
@@ -129,7 +149,8 @@ def target_creator(sample_list, ref, dir):
                '-I ' + dir + i + '/' + i + '-smds_withRG.bam ' +
                '-o ' + dir + i + '/' + i + '_realigned.list')
         run(cmd)
-            
+
+# Add read group headers to a bam file **NAIVE IMPLEMENTATION**        
 def add_headers(sample_list, dir):
     for i in sample_list:
         file = dir + i + '/' + i + '-smds.bam'
@@ -148,6 +169,7 @@ def add_headers(sample_list, dir):
         cmd = ('rm ' + file)
         run(cmd)
 
+# Realign reads around indel targets
 def realign(sample_list, ref, dir):
     for i in sample_list:
         file = dir + i + '/' + i + '-smds_withRG.bam'
