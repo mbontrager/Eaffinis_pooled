@@ -36,9 +36,9 @@ def main():
     output = glob.glob(options.dir + "/*.bam")
 
     # Add all .bam files in the input directory to the samples list
-    sample_list = ['BRE']
-    #for f in output:
-     #   sample_list.append(f.replace(options.dir, '').replace('.bam', ''))
+    sample_list = []
+    for f in output:
+        sample_list.append(f.replace(options.dir, '').replace('.bam', ''))
     
     # Modify this path to point at your picard .jar file 
     picard_path = '/home/lee/bioinformatics/picard-tools-1.135/picard.jar'
@@ -48,17 +48,17 @@ def main():
     
     # Filter unmapped reads from the bam file. And perform counts of unmapped
     # reads to understand mapping patterns
-    filter_unmapped(sample_list, options.dir)
-    count_unmapped(sample_list, options.dir)
+    #filter_unmapped(sample_list, options.dir)
+    #count_unmapped(sample_list, options.dir)
     
     # Add read group headers to bam files. This is a very naive implementation
     # of adding read groups. I don't use the Illumina run information. As such,
     # there are aspects of read correction in GATK that may not work well.
-    add_headers(sample_list, options.dir)
+    #add_headers(sample_list, options.dir)
     
     # Find indel targets for realignment and then realign around them.
-    target_creator(sample_list, options.ref, options.dir)
-    #realign(sample_list, options.ref, options.dir)
+    #target_creator(sample_list, options.ref, options.dir)
+    realign(sample_list, options.ref, options.dir)
 
 # Simplify running bash commands
 def run(cmd):
