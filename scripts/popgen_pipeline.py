@@ -183,6 +183,25 @@ def realign(sample_list, ref, dir):
         run(cmd)
         cmd = ('rm ' + file)
         run(cmd)
+ 
+def recalibrate_qual(sample_list, ref, dir):
+    for i in sample_list:
+        file = dir + i + '/' + i +'_realigned.bam'
+        cmd = ('java -jar $GATK ' + 
+        '-T BaseRecalibrator ' +
+        '-R ' + ref + ' ' + 
+        '-I ' + file + ' ' + 
+        '-o ' + dir + i + '/' + i + '_recal_data.table')
+        
+        print(cmd)
+        
+        cmd = ('java -jar $GATK ' +
+        '-T PrintReads ' + 
+        '-R ' + ref + ' ' +
+        '-I ' + file + ' ' + 
+        '-BQSR ' + dir + i + '/' + i + '_recal_data.table ' + 
+        '-o ' + dir + i + '/' + i + '_recal.bam')
+        print(cmd)
 
 if __name__ == "__main__":
     main()
