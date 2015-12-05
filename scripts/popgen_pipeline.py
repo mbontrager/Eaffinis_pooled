@@ -58,7 +58,13 @@ def main():
     
     # Find indel targets for realignment and then realign around them.
     #target_creator(sample_list, options.ref, options.dir)
-    realign(sample_list, options.ref, options.dir)
+    #realign(sample_list, options.ref, options.dir)
+    
+    # Recalibrate base quality scores
+    #recalibrate_qual(sample_list, options.ref, options.dir)
+    
+    #Call variants
+    call_snps(sample_list, options.ref, options.dir)
 
 # Simplify running bash commands
 def run(cmd):
@@ -184,6 +190,7 @@ def realign(sample_list, ref, dir):
         cmd = ('rm ' + file)
         run(cmd)
  
+# Recalibrate base quality scores. Unused since we don't know polymorphic sites
 def recalibrate_qual(sample_list, ref, dir):
     for i in sample_list:
         file = dir + i + '/' + i +'_realigned.bam'
@@ -201,6 +208,21 @@ def recalibrate_qual(sample_list, ref, dir):
         '-I ' + file + ' ' + 
         '-BQSR ' + dir + i + '/' + i + '_recal_data.table ' + 
         '-o ' + dir + i + '/' + i + '_recal.bam')
+        print(cmd)
+        
+#First round of SNP calling with HaplotypeCaller
+def call_snps(sample_list, ref, dir):
+    for i in sample_list:
+        file = dir + i + '/' + i +'_realigned.bam'
+        cmd = ('java -jar $GATK ' + 
+        '-T HaplotypeCaller ' + 
+        '-R ' + ref + ' ' + 
+        '-I ' + file + ' ' + 
+        '-ploidy 200 ' + 
+        '--genotyping_mode DISCOVERY ' + 
+        '-stand_emit_conf 10 '  + 
+        '-stand_call_conf 30 ' + 
+        '-o ' + dir + i + '/' + i + '_variants.vcf')
         print(cmd)
 
 if __name__ == "__main__":
