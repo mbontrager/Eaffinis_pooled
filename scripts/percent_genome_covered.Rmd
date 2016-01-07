@@ -1,0 +1,16 @@
+---
+title: "CoverageStats"
+author: "Martin Bontrager"
+date: "7 January 2016"
+output: html_document
+---
+
+Simply determine the percent of the reference genome covered by each sequencing sample
+
+```{r input}
+library(dplyr)
+stats <- read.csv("MAE-smds.coverage.py.percontig", sep = "\t")
+stats <- mutate(stats, bases = length * percentage_covered_sample_0 * 0.01)
+a <- sum(stats$bases) / 494890867 # Divide covered bases by total genome size 
+print(a)
+```
