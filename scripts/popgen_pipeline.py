@@ -1,17 +1,27 @@
 #!/usr/bin/python
 
-import sys, getopt, glob, subprocess, shutil
+import getopt
+import shutil
+import glob
+import sys
+import os
+import argparse
+import subprocess
+from signal import signal, SIGPIPE, SIG_DFL
 from optparse import OptionParser
+from Bio import SeqIO, SeqUtils
 
-################################################################################
+###############################################################################
 # Wrap script for pooled population genomics analysis
 #
 # Author: Martin Bontrager
-#
+# Coverage statistics functions borrowed and modified from author @inodb
+# from the script "gen_contig_cov_per_bam_table.py"
+# 
 # Usage: python popgen_pipeline.py -r /full/path/to/reference/genome.fa -d
 #                                  /full/path/to/bamfile/dir/
 #
-################################################################################
+###############################################################################
 
 def main():
     
@@ -46,6 +56,9 @@ def main():
     # Mark duplicates in the bam files, and sort, index the files   
     #mark_duplicates(sample_list, options.ref, options.dir, picard_path)
     
+    # Coverage statisitics (thanks to @inodb for the original script)
+    gen_contig_cov_per_bam_table(options.ref, options.dir, sample_list)
+    
     # Filter unmapped reads from the bam file. And perform counts of unmapped
     # reads to understand mapping patterns
     #filter_unmapped(sample_list, options.dir)
@@ -64,7 +77,7 @@ def main():
     #recalibrate_qual(sample_list, options.ref, options.dir)
     
     #Call variants
-    call_snps(sample_list, options.ref, options.dir)
+    #call_snps(sample_list, options.ref, options.dir)
 
 # Simplify running bash commands
 def run(cmd):
@@ -224,6 +237,111 @@ def call_snps(sample_list, ref, dir):
         '-stand_call_conf 30 ' + 
         '-o ' + dir + i + '/' + i + '_variants.vcf')
         print(cmd)
+        
+###############################################################################
+# Coverage stats functions from @inodb
+
+def get_gc_and_len_dict(fastafile):
+    """Creates a dictionary with the fasta id as key and GC and length as keys
+    for the inner dictionary."""
+    out_dict = {}
+
+    for rec in SeqIO.parse(fastafile, "fasta"):
+        out_dict[rec.id] = {}
+        out_dict[rec.id]["length"] = len(rec.seq)
+        out_dict[rec.id]["GC"] = SeqUtils.GC(rec.seq)
+
+    return out_dict
+
+
+def get_bedcov_dict(bedcoverage):
+    """Uses the BEDTools genomeCoverageBed histogram output to determine mean
+    coverage and percentage covered for each contig.
+    Returns dict with fasta id as key and percentage covered and cov_mean as
+    keys for the inner dictionary."""
+    out_dict = {}
+
+    # Check if given argument is a file, otherwise use the content of the
+    # variable
+    if os.path.isfile(bedcoverage):
+        fh = open(bedcoverage)
+    else:
+        fh = bedcoverage.split('\n')[:-1]
+
+    for line in fh:
+        cols = line.split()
+
+        try:
+            d = out_dict[cols[0]]
+        except KeyError:
+            d = {}
+            out_dict[cols[0]] = d
+
+        if int(cols[1]) == 0:
+            d["percentage_covered"] = 100 - float(cols[4]) * 100.0
+        else:
+            d["cov_mean"] = d.get("cov_mean", 0) + int(cols[1]) * float(cols[4])
+    return out_dict
+
+
+def print_input_table(fastadict, bcd):
+    """Writes the input table for Probin to stdout. See hackathon google
+    docs."""
+
+    # Header
+    sys.stdout.write("contig\tlength\tGC\tcov_mean\tpercent_covered")   
+    sys.stdout.write("\n")
+
+    # Content
+    assert(len(fastadict) > 0)
+    for acc in fastadict:
+        # fasta stats
+        sys.stdout.write("%s\t%d\t%f" %
+            (
+                acc,
+                fastadict[acc]['length'],
+                fastadict[acc]['GC']
+            )
+        )
+
+
+        try:
+            # Print cov mean
+            sys.stdout.write("\t%f" % (bcd[acc]["cov_mean"]))
+        except KeyError:                # No reads mapped to this contig
+            sys.stdout.write("\t0")
+
+        # Print percentage covered
+        try:
+            # Print percentage covered
+            sys.stdout.write("\t%f" % (bcd[acc]["percentage_covered"]))
+        except KeyError:
+            if acc in bcd and "cov_mean" in bcd[acc]:
+                # all reads were covered
+                sys.stdout.write("\t100")
+            else:
+                # No reads mapped to this contig
+                sys.stdout.write("\t0")
+
+        sys.stdout.write("\n")
+
+
+def gen_contig_cov_per_bam_table(fastafile, indir, samplenames):
+    """Reads input files into dictionaries then prints everything in the table
+    format required for running ProBin."""
+    
+    bamfiles = []
+    for i in samplenames:
+        bamfiles.append(indir + i + '/' + i + '-smds.coverage')
+
+    for f in bamfiles:
+        bedcovdicts = get_bedcov_dict(f)
+            
+        sys.stdout = open(f + '.pipe.percontig', 'w')
+        print_input_table(get_gc_and_len_dict(fastafile), bedcovdicts)
+        sys.stdout.close()
+#    
+###############################################################################
 
 if __name__ == "__main__":
     main()

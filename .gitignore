@@ -4,3 +4,4 @@ analyses/
 .dropbox
 scripts/addReadGroups.py
 scripts/.Rhistory
+data/

@@ -8,9 +8,37 @@ output: html_document
 Simply determine the percent of the reference genome covered by each sequencing sample
 
 ```{r input}
-library(dplyr)
-stats <- read.csv("MAE-smds.coverage.py.percontig", sep = "\t")
-stats <- mutate(stats, bases = length * percentage_covered_sample_0 * 0.01)
-a <- sum(stats$bases) / 494890867 # Divide covered bases by total genome size 
-print(a)
+library(knitr)
+setwd("/media/lee/new_york/metagenomics/alignments_copepod_stampy") #labPC dir
+samples <- list.files(pattern="*.bam")
+samples <- gsub(".bam", "", samples)
+
+# Check how much of the reference genome is covered by each sample
+colnames <- c("Sample", "Genome_size", "total_reads", "%unmapped", "%mapped", "%genome_cov", "cov_med", "cov_mean", "cov_sd")
+
+cov_stats <- matrix(0, ncol=9)
+colnames(cov_stats) <- colnames
+
+for (i in samples){
+    a <- read.delim(paste(i, "/", i, "-smds.mappingstats.tsv", sep=''), header=FALSE)
+    b <- read.delim(paste(i, "/", i, "-smds.coverage.py.percontig", sep = ''), header=TRUE)
+    total_mapped_reads <- sum(a$V3)
+    total_unmapped_reads <- sum(a$V4)
+    total_reads <- total_mapped_reads + total_unmapped_reads
+    percent_unmapped <- round(total_unmapped_reads / (total_mapped_reads + total_unmapped_reads) * 100, 2)
+    percent_mapped <- round(total_mapped_reads / total_reads * 100, 2)
+    genome_size <- sum(a$V2)
+    genome_size_mapped <- sum(b$length)
+    percent_genome_covered <- round(sum(b$length * 0.01 *b$percentage_covered_sample_0) / genome_size_mapped * 100, 2)
+    coverage_median <- round(median(b$cov_mean_sample_0), 2)
+    coverage_mean <- round(mean(b$cov_mean_sample_0), 2)
+    coverage_sd <- round(sd(b$cov_mean_sample_0), 2)
+    
+    cov_stats <- rbind(cov_stats, c(i, genome_size, total_reads, percent_unmapped, percent_mapped,
+                                         percent_genome_covered, coverage_median, coverage_mean, coverage_sd))
+}
+
+rownames(cov_stats) <- cov_stats[,1]
+cov_stats <- as.data.frame(cov_stats[-1,-1])
+kable(cov_stats)
 ```
