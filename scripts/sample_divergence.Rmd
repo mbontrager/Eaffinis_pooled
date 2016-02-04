@@ -1,0 +1,169 @@
+---
+title: "Pooled sequencing read coverage"
+author: "Martin Bontrager"
+date: "3 February 2016"
+output: html_document
+---
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='Figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+```
+
+## Divergence between *E. affinis* Populations
+
+
+
+
+The question here is: what is the divergence between populations of E. affinis? What can we expect? I have taken all of the de novo genome assemblies from Arthur Brady's pipeline, subsetted them to include only contigs > 3000bp, and aligned those contigs to the L'isle Verte reference genome (with BLAST). I've then taken only alignments > 2000bp and collected the percent identity for all of those alignments for each population. What follows is a table of copepod populations, the number of alignments > 2000bp, and the median alignment percent identity to the reference:
+
+
+
+
+```{r read_data, echo=FALSE}
+theme_set(theme_bw())
+setwd("~/remote/media/lee/wisconsin/metagenomics/sorted_data/assemblies_metagenome/FINAL_unsorted_ASSEMBLIES_ABrady_pipeline/copepod/blast_output") #Lab PC directory
+files <- list.files(pattern="*.b6")
+
+per.id <- list()
+summary.stats <- matrix(NA, nrow=length(files), ncol=2)
+
+for (i in files){
+    a <- read.delim(i, header = FALSE)
+    sample <- gsub("_3000.b6", "", i)
+    h <- c("qlabel", "target", "per_id", "len", "mismatches", "gaps", "qstart", 
+           "qend", "tstart", "tend", "evalue", "bitscore")
+    colnames(a) <- h
+    a <- filter(a, len > 2000)
+    per.id[[sample]] <- a$per_id
+}
+
+# Thanks to the following Stack Overflow answer, this is easy to 
+# create a long data frame for ggplot2 plotting.
+# http://stackoverflow.com/questions/18179856/how-to-plot-a-list-of-vectors-with-different-lengths
+
+dat <- lapply(per.id, function(x) cbind(x = seq_along(x), y = x))
+list.names <- names(dat)
+lns <- sapply(dat, nrow)
+dat <- as.data.frame(do.call("rbind", dat))
+dat$group <- rep(list.names, lns)
+names(dat)[2] <- "percent_id"
+
+p <- ggplot(dat, aes(x=percent_id, fill=group)) + geom_density(alpha=0.3) + 
+    scale_x_continuous(limits=c(80, 100)) +
+    ggtitle("Percent ID per sample")
+
+a <- aggregate(. ~ group, dat[-1], function(x) Median = round(median(x), 2))
+b <- aggregate(. ~ group, dat[-1], function(x) SD = sd(x))
+c <- merge(a, b, by="group")
+names(c)[2:3] <- c("Median_ID", "SD")
+a <- with(dat, table(group))
+a <- as.data.frame(a)
+c <- merge(a, c, by="group")
+kable(c)
+```
+
+
+
+
+This table makes a lot of sense for the most part, except for the positioning of the FRE sample, which is from a Frisian Lake but seems to have the divergence of Green clade. I'm not sure why that would be other than a sample mix-up, or potentially an interesting finding that FRE is not derived from European salt water but potentially from a differenct ancestral population. More likely is that this is due to the fact that there are significantly fewer long alignments from the FRE population. I'm not quite sure why this might be. Maybe there were problems assembling the FRE genome?
+
+In any case, we can look at a graph of all of these samples just to take a peek at what it looks like:
+
+
+```{r plot1}
+p
+```
+
+
+
+
+
+That is OK but not really that useful in general. I'll subset this by clade so we can better see what is going on:
+
+### Red Clade
+
+```{r red_clade}
+dat1 <-filter(dat, group %in% c("BRE", "MIE", "MAE", "V1E"))
+ggplot(dat1, aes(x=percent_id, fill=group)) + geom_density(alpha=0.2) + 
+    scale_x_continuous(limits=c(75, 100)) +
+    ggtitle("Percent ID per sample Red Clade")
+```
+
+### Green Clade
+
+```{r green_clade}
+dat1 <-filter(dat, group %in% c("TBE", "TXE", "EUE", "LOE", "CBE"))
+ggplot(dat1, aes(x=percent_id, fill=group)) + geom_density(alpha=0.2) + 
+    scale_x_continuous(limits=c(75, 100)) +
+    ggtitle("Percent ID per sample Green Clade")
+```
+
+### Purple Clade
+
+```{r purple_clade}
+dat1 <-filter(dat, group %in% c("FRE", "IJE", "MME", "SCE"))
+ggplot(dat1, aes(x=percent_id, fill=group)) + geom_density(alpha=0.2) + 
+    scale_x_continuous(limits=c(75, 100)) +
+    ggtitle("Percent ID per sample purple Clade")
+```
+
+
+
+This all makes complete sense again except possibly for FRE. Not sure what is going on there. It could be really cool, and it could also be an artifact or sample mix-up.
+
+# Align to scaffolds vs. contigs
+
+
+
+
+I was wondering if the percent identity is potentially skewed artificially lower by aligning to the scaffolded genome as opposed to just the contigs. The reason I'm worried is just the number of "N" unknown nucleotides that exist in the scaffolded genome. So I'm going to compare the BRE sample both aligned to the contigs and to the scaffolds to see if there is any difference:
+
+```{r BRE_test}
+setwd("~/Dropbox/Projects/population_genomics/data")
+
+files <- list.files(pattern="*.b6")
+
+per.id <- list()
+summary.stats <- matrix(NA, nrow=length(files), ncol=2)
+
+for (i in files){
+    a <- read.delim(i, header = FALSE)
+    sample <- gsub("_3000.b6", "_scaf", i)
+    sample <- gsub("_3000_con.b6", "_con", sample)
+    h <- c("qlabel", "target", "per_id", "len", "mismatches", "gaps", "qstart", 
+           "qend", "tstart", "tend", "evalue", "bitscore")
+    colnames(a) <- h
+    a <- filter(a, len > 2000)
+    per.id[[sample]] <- a$per_id
+}
+
+# Thanks to the following Stack Overflow answer, this is easy to 
+# create a long data frame for ggplot2 plotting.
+# http://stackoverflow.com/questions/18179856/how-to-plot-a-list-of-vectors-with-different-lengths
+
+dat <- lapply(per.id, function(x) cbind(x = seq_along(x), y = x))
+list.names <- names(dat)
+lns <- sapply(dat, nrow)
+dat <- as.data.frame(do.call("rbind", dat))
+dat$group <- rep(list.names, lns)
+names(dat)[2] <- "percent_id"
+
+p <- ggplot(dat, aes(x=percent_id, fill=group)) + geom_density(alpha=0.3) + 
+    scale_x_continuous(limits=c(75, 100)) +
+    ggtitle("Percent ID per sample")
+
+a <- aggregate(. ~ group, dat[-1], function(x) Median = median(x))
+b <- aggregate(. ~ group, dat[-1], function(x) SD = sd(x))
+c <- merge(a, b, by="group")
+names(c)[2:3] <- c("Median_ID", "SD")
+c <- arrange(c, desc(Median_ID))
+kable(c)
+
+print(p)
+
+```
+
+It turns out that there is not too much difference, so I'm not going to worry about it too much with respect to these alignments.
