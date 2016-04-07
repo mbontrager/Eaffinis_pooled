@@ -242,7 +242,7 @@ def call_snps_lofreq(sample_list, ref, dir):
     for i in sample_list:
         file = dir + i + '/' + i +'_realigned.bam'
         cmd = ('lofreq call-parallel --call-indels --pp-threads 6 ' + 
-        '-f ' + ref + '-o ' + i + '_lofreq_vars.vcf ' + file)
+        '-f ' + ref + ' -o '+ dir + i + '/' + i + '_lofreq_vars.vcf ' + file)
         run(cmd)
         
 ###############################################################################
