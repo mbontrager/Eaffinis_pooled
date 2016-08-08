@@ -1,0 +1,16 @@
+job = sortBam
+universe = vanilla
+log = /home/bontrager2/logs/$(job)_$(Cluster).log
+executable = /home/bontrager2/bin/sortBam.sh
+output = /home/bontrager2/logs/$(job)_$(Cluster)_$(Process).out
+error = /home/bontrager2/logs/$(job)_$(Cluster)_$(Process).err
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+request_cpus = 10
+transfer_input_files = /home/bontrager2/samtools
+# Memory in MBs
+request_memory = 8000
+# Disk space in KBs
+request_disk = 100000000
+requirements = (Target.HasGluster == true)
+queue 1

@@ -1,0 +1,7 @@
+JOB A job_A.submit
+JOB B job_B.submit
+JOB C job_C.submit
+JOB D job_D.submit
+
+PARENT A CHILD B C 
+PARENT B C CHILD D

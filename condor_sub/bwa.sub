@@ -1,0 +1,28 @@
+job = bwa-mem
+universe = vanilla
+log = /home/bontrager2/logs/$(job)_$(pop_sample).log
+executable = /home/bontrager2/sub/bwa.sh
+arguments = $(pop_sample)
+output = /home/bontrager2/logs/$(job)_$(pop_sample).out
+error = /home/bontrager2/logs/$(job)_$(pop_sample).err
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = /home/bontrager2/bwa,/home/bontrager2/samtools
+request_cpus = 32
+# Memory in MBs
+request_memory = 64000
+# Disk space in KBs
+request_disk = 100000000
+requirements = (Target.HasGluster == true)
+
+pop_sample = CBE
+queue 1
+
+#pop_sample = MAE
+#queue 1
+
+#pop_sample = VIE
+#queue 1
+
+#pop_sample = MIE
+#queue 1

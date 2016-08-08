@@ -1,0 +1,13 @@
+#
+executable = makeblastdb
+arguments = -in /mnt/gluster/bontrager2/trembldb/trembl.fasta --dbtype nucl -out trembl 
+log = /home/bontrager2/logs/$(job)_$(Cluster).log
+output = /home/bontrager2/logs/$(job)_$(Cluster)_$(Process).out
+error = /home/bontrager2/logs/$(job)_$(Cluster)_$(Process).err
+
+#
+transfer_input_files = /mnt/gluster/bontrager2/trembldb/trembl.fasta
+Requirements = (Target.HasGluster == true)
+#
+request_memory = 12000
+request_disk = 100000

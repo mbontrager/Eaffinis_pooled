@@ -1,0 +1,28 @@
+job = stampy
+universe = vanilla
+log = /home/bontrager2/logs/$(job)_$(pop_sample).log
+arguments = $(pop_sample)
+output = /home/bontrager2/logs/$(job)_$(pop_sample).out
+error = /home/bontrager2/logs/$(job)_$(pop_sample).err
+executable = /home/bontrager2/sub/stampy.sh
+transfer_input_files = /home/bontrager2/samtools
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+request_cpus = 32
+# Memory in MBs
+request_memory = 64000
+# Disk space in KBs
+request_disk = 100000000
+requirements = (Target.HasGluster == true)
+
+pop_sample = CBE
+queue 1
+
+#pop_sample = MAE
+#queue 1
+
+#pop_sample = VIE
+#queue 1
+
+#pop_sample = MIE
+#queue 1

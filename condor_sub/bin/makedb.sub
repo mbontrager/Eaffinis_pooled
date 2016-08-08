@@ -1,0 +1,16 @@
+job = makedb
+universe = vanilla
+log = /home/bontrager2/logs/$(job)_$(Cluster).log
+output = /home/bontrager2/logs/$(job)_$(Cluster).out
+error = /home/bontrager2/logs/$(job)_$(Cluster).err
+executable = /home/bontrager2/bin/makedb.sh
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = /home/bontrager2/blast/bin
+request_cpus = 20
+# Memory in MBs
+request_memory = 12000
+# Disk space in KBs
+request_disk = 50000000
+requirements = (Target.HasGluster == true)
+queue 1

@@ -1,0 +1,2 @@
+#!/bin/bash
+ngm-0.4.12/ngm -r /mnt/gluster/bontrager2/gen_consensus_test/cbe_scaf10_cns.fa -1 /mnt/gluster/bontrager2/CBE_R1.fastq.gz -2 /mnt/gluster/bontrager2/CBE_R2.fastq.gz -o /mnt/gluster/bontrager2/gen_consensus_test/NGMgreen.test.sam -t 4 -p
