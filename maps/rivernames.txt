@@ -1,0 +1,348 @@
+Abay
+Abay (Blue Nile)
+Al Furat
+Alabama
+Albany
+Albert Nile
+Aldan
+Allegheny
+Amazonas
+Amu  Darya
+Amur
+Anadyr’
+Angara
+Araguaia
+Argun’ (Ergun)
+Arkansas
+Atbara
+Athabasca
+Ayeyarwady
+Bénoué
+Back
+Bafing
+Bahr el  Zeraf
+Bahr el Jebel  (Mountain Nile)
+Bahr el Jebel  (White Nile)
+Bamingui
+Bío-Bío
+Barito
+Barwon
+Benue
+Biya
+Borcea
+Braco Menor
+Brahmaputra
+Branco
+Bratul Chillia
+Bratul Sfintu Gheorghe
+Bratul Sulina
+Brazos
+Busira
+Bykovskaya Protoka
+Caquetá
+Chang Jiang (Yangtze)
+Chari
+Chattahoochee
+Chattooga
+Chenab
+Chixoy
+Chubut
+Chulyshman
+Churchill
+Coco
+Colorado
+Columbia
+Congo
+Copper
+Coppermine
+Cubango
+Culuene
+Dadu
+Dalälven
+Daly
+Damietta Branch
+Danube
+Darling
+Daugava (Zapadnaya Dvina)
+Desaguadero
+Dicle
+Digul
+Dihang
+Dnepre
+Dniester
+Dnipro (Dnieper)
+Don
+Donau (Danube)
+Double Mountain Fork Brazos
+Drava
+Duero
+Ebro
+El Bahr el Abyad  (White Nile)
+El Bahr el Azraq  (Blue Nile)
+Elbe
+Ertis
+Ertix (Irtysh)
+Euphrates
+Ferenc Csatorna
+Finlay
+Firat
+Fitzroy
+Fraser
+Göta älv
+Gan
+Ganges
+Garonne
+Genal?
+Gharraf Canal
+Gila
+Glomma (Glåma)
+Godävari
+Grande
+Great Pee Dee
+Guaporé
+Hailar
+Han
+Heilong Jiang (Amur)
+Helmand
+Holston
+Hong (Red)
+Hongshui
+Huang
+Huang (Yellow)
+Hudson
+Ideriyn
+Indaiá
+Indigirka
+Indragi
+Indus
+Irrawaddy Delta
+Irtysh
+Ishikari
+Ismailiya Canal
+Japurá
+Jequitinhonha
+Jinsha (Yangtze)
+Jordan
+Jubba
+Juruena
+Kadéï
+Kafue
+Kagera
+Kama
+Kamchatka
+Kapuas
+Kasai
+Katherine
+Kayan
+Kem
+Kemijoki
+Khatanga
+Kheta
+Kibali
+Klamath
+Kokemäenjoki
+Kolyma
+Konqi
+Koukourou
+Koyukuk
+Krishna
+Kuskokwim
+Kwango
+Kyzyl-Khem
+La Grande Rivière
+Lancang (Mekong)
+Lek
+Lena
+Liao
+Liard
+Limpopo
+Loire
+Lom
+Lower  Tunguska (Nizhnyaya Tunguska)
+Lualaba
+Lualaba (Congo)
+Mackenzie
+Madeira
+Madison
+Madre de Dios
+Magdalena
+Mahäna Nadï
+Malyy Yenisey
+Mamberamo
+Mamoré
+Mananantanana
+Mangoky
+Maquan (Damqogkanbab)
+Marañón
+Mekong
+Mendoza
+Meta
+Min
+Mississippi
+Missouri
+Mitchell
+Mouhoun  (Black Volta)
+Murray
+N. Fork Kuskokwim
+Nakanbé (White Volta)
+Nanpan
+Narmada
+Naryn
+Nederrijn
+Negro
+Nelson
+Neuquén
+Neva
+Niagra
+Niger
+Nile
+Nmai
+North Saskatchewan
+Nu
+Nu (Salween)
+Ob
+Ob'
+Ob’
+Oder
+Ohio
+Okavango
+Olenëk
+Olenekskaya Protoka
+Omo
+Orange
+Ord
+Orinoco
+Ottawa
+Ouham
+Pánuco
+Pamir
+Panama Canal
+Panj
+Paraiba
+Paraná
+Paranaíba
+Peace
+Pechora
+Pend Orielle
+Pilcomayo
+Pit
+Po
+Porcupine
+Potomac
+Purús
+Purari
+Quan
+R. des Outaouais
+Rainy
+Río Grande de Santiago
+Rhône
+Rhein
+Rhin (Rhein)
+Rhine
+Rio Grande
+Rosetta Branch
+Ruki
+Rupert
+Ruvuma
+S. Branch Potomac
+São  Francisco
+Sénégal
+Sacramento
+Saint John
+Salado
+Salween
+San Joaquin
+San Juan
+Sanaga
+Sangha
+Santa Cruz
+Saskatchewan
+Sassandra
+Savannah
+Seine
+Selenge (Selenga)
+Semliki
+Setit
+Shatt al Arab
+Shiquan
+Shire
+Shishhid Gol
+Skeena
+Slave
+Snake
+Songhua (Sungari)
+Soroksari Duna
+South Saskatchewan
+Sprague
+St. Clair
+St. Lawrence
+Stikine
+Suez Canal
+Sukhona
+Susitna
+Sutlej
+Svernaya Dvina
+Svir’
+Syr  Darya
+Tajo
+Tanana
+Tapajós
+Tarim
+Taritatu
+Taz
+Tejo (Tagus)
+Tennessee
+Teslin
+Thames
+Thelon
+Tigris
+Tisa
+Tisza
+Tobol
+Tocantins
+Tom’
+Tongtian
+Trofimovskaya Protoka
+Tshuapa
+Tugaloo
+Tumatskaya Protoka
+Tuotuo
+Ubangi
+Ucayali
+Uele
+Ural
+Uruguay
+Usumacinta
+Vaal
+Verde
+Verkhniy Yenisey
+Victoria Nile
+Vilyuy
+Vistula
+Volga
+Volta
+Vorma
+Vuoksi
+Vychegda
+Waal
+Wabash
+Waikato
+Waitaki
+Weir
+Willamette
+Winnipeg
+Xar Moron
+Xi
+Xiliao
+Xingu
+Xun
+Yadkin
+Yamuna
+Yangtze
+Yarkant
+Yarlung (Brahmaputra)
+Yenisey
+Yuan
+Yukon
+Za
+Zambezi

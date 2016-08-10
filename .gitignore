@@ -5,3 +5,5 @@ analyses/
 scripts/addReadGroups.py
 scripts/.Rhistory
 data/
+maps/ne_50m_rivers_lake_centerlines/
+plots/
