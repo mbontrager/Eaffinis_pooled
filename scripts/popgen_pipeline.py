@@ -39,7 +39,7 @@ def main():
         parser.error('Reference genome not given')
         sys.exit(2)
     if not options.dir:   # if dir is not given
-        parser.error('Bam directory not give')
+        parser.error('Bam directory not given')
         sys.exit(2)
 
     options.dir.rstrip('/')
@@ -57,7 +57,7 @@ def main():
     #mark_duplicates(sample_list, options.ref, options.dir, picard_path)
     
     # Coverage statisitics (thanks to @inodb for the original script)
-    #gen_contig_cov_per_bam_table(options.ref, options.dir, sample_list)
+    gen_contig_cov_per_bam_table(options.ref, options.dir, sample_list)
     
     # Filter unmapped reads from the bam file. And perform counts of unmapped
     # reads to understand mapping patterns
@@ -77,7 +77,7 @@ def main():
     #recalibrate_qual(sample_list, options.ref, options.dir)
     
     #Call variants
-    call_snps_lofreq(sample_list, options.ref, options.dir)
+    #call_snps_lofreq(sample_list, options.ref, options.dir)
 
 # Simplify running bash commands
 def run(cmd):

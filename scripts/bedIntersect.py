@@ -42,8 +42,6 @@ def create_bed(infile, outfile):
     with open(infile) as fr, open(outfile, 'w') as fw:
         reader = csv.reader(fr, delimiter=' ')
         writer = csv.writer(fw, delimiter='\t')
-        headers = ['chrom', 'chromStart', 'chromEnd']
-        writer.writerow(headers)
         for row in reader:
             newrow = [None] * 3
             newrow[0] = row[0].strip('"')
