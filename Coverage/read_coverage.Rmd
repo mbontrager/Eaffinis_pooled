@@ -1,0 +1,51 @@
+---
+title: "Pooled sequencing read coverage"
+author: "Martin Bontrager"
+date: "21 September 2016"
+output: html_document
+---
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='Figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE, cache=TRUE)
+library(ggplot2)
+library(gridExtra)
+library(RColorBrewer)
+```
+
+After Illumina sequencing of pooled populations of E. affinis, I want to generate read coverage stats and figures for the sequenced samples. The reads have already been quality filtered, aligned with BWA-MEM and Stampy, then indexed and sorted into .bam files. 
+
+```{r read_data}
+#setwd("/home/tiago/LeeRemote/metagenomics/alignments_copepod_stampy") #Tiago's work directory
+flist <- list.files(pattern="*.cov$")
+theme_set(theme_bw(base_size = 12))
+col <- brewer.pal(4, "Set1")
+
+plot_list <- list()
+for (i in 1:length(flist)){
+    s <- gsub(".percontig.cov", "", flist[i])
+    print(paste("#", s, sep = ''))
+    
+    
+    a <- read.delim(flist[i])
+    l <- paste("Coverage mean: ", round(mean(x=a$cov_mean_sample_0), 2))
+    print(l)
+    p <- ggplot(a, aes(x=cov_mean_sample_0)) + 
+        geom_density(colour="black", fill=col[i], alpha=0.4) +
+        coord_cartesian(xlim = c(0, 150)) +
+        xlab("Coverage per Scaffold") + 
+        ggtitle(paste("Sample ", s)) +
+        annotate("text", -Inf, Inf, label = l, size = 5, 
+                 hjust = -0.7, vjust = 10)
+    print(p)
+    plot_list[[i]] = p
+}
+
+
+pdf("Fig-Coverage_plot.pdf", height = 8.5, width = 11)
+grid.arrange(plot_list[[1]], plot_list[[2]], plot_list[[3]], 
+             plot_list[[4]], ncol = 2)
+dev.off()
+
+grid.arrange(plot_list[[1]], plot_list[[2]], plot_list[[3]], 
+             plot_list[[4]], ncol = 2)
+```

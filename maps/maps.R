@@ -42,10 +42,10 @@ NAmap <- ggplot() + geom_polygon(data = usa, aes(x=long, y = lat, group = group)
     geom_polygon(data = canada, aes(x=long, y = lat, group = group), fill = "white", color="black") + 
     geom_path(data=watershedDF, aes(x = long, y = lat, group = group), color = 'black', size=0.5) +
     coord_fixed(1.3) + coord_fixed(xlim = c(-92.5, -65),  ylim = c(40, 50), ratio = 1.3)
-NAmap <- NAmap + geom_point(data=redfresh, aes(x=Longitude, y=Latitude), fill=rf, color = "black", shape=21, size=8.9) +
-    geom_point(data=redsalt, aes(x=Longitude, y=Latitude), fill=rs, color = "black", shape=21, size=8.9)
-pdf("NAmerica.pdf",width=9,height=4.5, useDingbats = FALSE)
+NAmap <- NAmap + geom_point(data=redfresh, aes(x=Longitude, y=Latitude), fill=rf, color = "black", shape=21, size=7) +
+    geom_point(data=redsalt, aes(x=Longitude, y=Latitude), fill=rs, color = "black", shape=21, size=7)
+pdf("Fig-NAmerica.pdf",width=8,height=4.5, useDingbats = FALSE)
 NAmap + theme_nothing() + theme(panel.background = element_rect(fill = "grey88")) +
-    scaleBar(lon = -77.5, lat = 41, distanceLon = 300, distanceLat = 50, distanceLegend = 100, dist.unit = "km", legend.size = 7.5, orientation = FALSE)
+    scaleBar(lon = -91.5, lat = 40, distanceLon = 300, distanceLat = 50, distanceLegend = 100, dist.unit = "km", legend.size = 6.5, orientation = FALSE)
 dev.off()
 
