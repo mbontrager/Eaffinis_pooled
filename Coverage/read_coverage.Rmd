@@ -4,6 +4,7 @@ author: "Martin Bontrager"
 date: "21 September 2016"
 output: html_document
 ---
+
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='Figs/',
                       echo=FALSE, warning=FALSE, message=FALSE, cache=TRUE)
@@ -23,6 +24,15 @@ col <- brewer.pal(4, "Set1")
 plot_list <- list()
 for (i in 1:length(flist)){
     s <- gsub(".percontig.cov", "", flist[i])
+    if (s == "BRE"){
+        loc = "Lake Ontario"
+    } else if( s == "MIE"){
+        loc = "Lake Michigan"
+    } else if(s == "VIE"){
+        loc = "L'isle Verte"
+    } else if(s == "MAE"){
+        loc = "Montmagny"
+    }
     print(paste("#", s, sep = ''))
     
     
@@ -33,7 +43,7 @@ for (i in 1:length(flist)){
         geom_density(colour="black", fill=col[i], alpha=0.4) +
         coord_cartesian(xlim = c(0, 150)) +
         xlab("Coverage per Scaffold") + 
-        ggtitle(paste("Sample ", s)) +
+        ggtitle(loc) +
         annotate("text", -Inf, Inf, label = l, size = 5, 
                  hjust = -0.7, vjust = 10)
     print(p)

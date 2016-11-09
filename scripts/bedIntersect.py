@@ -49,7 +49,10 @@ def create_bed(infile, outfile, window):
             newrow = [None] * 3
             newrow[0] = row[0].strip('"')
             newrow[2] = int(row[1]) + window
-            newrow[1] = int(row[1]) - window
+            if (int(row[1]) - window) < 0:
+                newrow[1] = 0
+            else:
+                newrow[1] = int(row[1]) - window
             writer.writerow(newrow)
 
 if __name__ == '__main__':

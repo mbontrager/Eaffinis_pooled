@@ -1,0 +1,22 @@
+---
+title: "metadata"
+author: "Martin Bontrager"
+date: "October 27, 2016"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+require(tidyverse)
+require(knitr)
+require(pander)
+
+setwd("~/Dropbox/Projects/population_genomics/maps")
+
+a = read_csv("metadata.csv")
+a = filter(a, Sample %in% c("V1E", "MAE", "BRE", "MIE")) %>%
+    select(-Continent, -Region, -Code)
+
+kable(a)
+
+```

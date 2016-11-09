@@ -1,0 +1,43 @@
+<jnlp spec="1.0+" codebase="http://www.chibi.ubc.ca/ermineJ/webstart" href="ermineJ.jnlp">
+	<information>
+	<title>ErmineJ</title>
+	<vendor>UBC Centre for High-Throughput Biology</vendor>
+	<homepage href="http://ermineJ.chibi.ubc.ca/"/>
+	<description>ErmineJ gene set analysis</description>
+	<icon href="ermineJ.gif"/>
+	</information>
+	<security>
+		<all-permissions/>
+	</security>
+ 	<resources>
+	<j2se version="1.5+" java-vm-args="-Xmx3g -Xms256m -Xss8m" />
+     	    
+    <jar href="ermineJ-3.0.3-SNAPSHOT.jar" main="true"/>
+    <jar href="baseCode-1.0.15.jar"/>
+    <jar href="colt-1.2.0.jar"/>
+    <jar href="xercesImpl-2.11.0.jar"/>
+    <jar href="xml-apis-1.4.01.jar"/>
+    <jar href="commons-net-3.1.jar"/>
+    <jar href="commons-math3-3.2.jar"/>
+    <jar href="commons-configuration-2.0-RCT.jar"/>
+    <jar href="commons-collections-3.2.1.jar"/>
+    <jar href="commons-lang3-3.1.jar"/>
+    <jar href="opencsv-2.3.jar"/>
+    <jar href="mtj-0.9.14.jar"/>
+    <jar href="slf4j-api-1.7.5.jar"/>
+    <jar href="jcl-over-slf4j-1.7.5.jar"/>
+    <jar href="jfreechart-1.0.13.jar"/>
+    <jar href="jcommon-1.0.16.jar"/>
+    <jar href="commons-io-2.4.jar"/>
+    <jar href="commons-beanutils-1.8.3.jar"/>
+    <jar href="commons-logging-1.1.1.jar"/>
+    <jar href="forehead-1.0-beta-5.jar"/>
+    <jar href="commons-cli-1.1.jar"/>
+    <jar href="jsontools-core-1.7.jar"/>
+    <jar href="antlr-2.7.7.jar"/>
+    <jar href="log4j-1.2.17.jar"/>
+    <jar href="slf4j-log4j12-1.7.5.jar"/>
+ 
+	</resources> 
+	<application-desc main-class="ubic.erminej.ErmineJGui"/>
+</jnlp>
